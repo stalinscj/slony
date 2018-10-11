@@ -1,0 +1,41 @@
+cluster name= slony_cursos;
+
+node 1 admin conninfo = 'dbname= cursos host= 192.168.0.101 user =postgres password=2222222';
+node 2 admin conninfo = 'dbname= cursos host= 192.168.0.100 user =postgres password=2222222';
+#node 3 admin conninfo = 'dbname= cursos host= 192.168.0.103 user =postgres password=1234';
+
+init cluster (id=1, comment='Sede Principal/sede1');
+
+create set (id=1, origin=1, comment='tablas de cursos');
+
+set add table(set id=1, origin=1, id=1, fully qualified name= 'public.empleados', comment='tabla empleados');
+set add table(set id=1, origin=1, id=2, fully qualified name= 'public.empleados_sede1', comment='tabla empleados sede 1');
+set add table(set id=1, origin=1, id=3, fully qualified name= 'public.empleados_sede2', comment='tabla empleados sede 2');
+set add table(set id=1, origin=1, id=4, fully qualified name= 'public.empleados_sede3', comment='tabla empleados sede 3');
+set add table(set id=1, origin=1, id=5, fully qualified name= 'public.ediciones', comment='tabla ediciones');
+set add table(set id=1, origin=1, id=6, fully qualified name= 'public.ediciones_sede1', comment='tabla ediciones sede 1');
+set add table(set id=1, origin=1, id=7, fully qualified name= 'public.ediciones_sede2', comment='tabla ediciones sede 2');
+set add table(set id=1, origin=1, id=8, fully qualified name= 'public.ediciones_sede3', comment='tabla ediciones sede 3');
+set add table(set id=1, origin=1, id=9, fully qualified name= 'public.participantes', comment='tabla participantes');
+set add table(set id=1, origin=1, id=10, fully qualified name= 'public.participantes_sede1', comment='tabla participantes sede 1');
+set add table(set id=1, origin=1, id=11, fully qualified name= 'public.participantes_sede2', comment='tabla participantes sede 2');
+set add table(set id=1, origin=1, id=12, fully qualified name= 'public.participantes_sede3', comment='tabla participantes sede 3');
+set add table(set id=1, origin=1, id=13, fully qualified name= 'public.cursos', comment='tabla cursos');
+set add table(set id=1, origin=1, id=14, fully qualified name= 'public.sedes', comment='tabla sedes');
+set add table(set id=1, origin=1, id=15, fully qualified name= 'public.departamentos', comment='tabla departamentos');
+set add table(set id=1, origin=1, id=16, fully qualified name= 'public.prelaciones', comment='tabla sedes');
+
+store node (id=2, comment = 'Sede foranea 2/sede2', EVENT NODE =1);
+#store node (id=3, comment = 'Sede foranea 3/sede3', EVENT NODE =1);
+
+store path (server=1, client=2, conninfo='dbname= cursos host = 192.168.0.101 user=postgres password= 2222222');
+store path (server=2, client=1, conninfo='dbname= cursos host = 192.168.0.100 user=postgres password= 2222222');
+#store path (server=1, client=3, conninfo='dbname= cursos host = 192.168.0.101 user=postgres password= 2222222');
+#store path (server=3, client=1, conninfo='dbname= cursos host = 192.168.0.103 user=postgres password= 1234');
+
+
+store listen (origin=1, provider=1, receiver=2);
+store listen (origin=2, provider=2, receiver=1);
+#store listen (origin=1, provider=1, receiver=3);
+#store listen (origin=3, provider=3, receiver=1);
+
